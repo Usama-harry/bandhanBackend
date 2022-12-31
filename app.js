@@ -11,12 +11,23 @@ const app = express();
 
 //Middlewares
 
+//CORS
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
+
 app.use(bodyParser.json());
 
 app.use("/auth", authRoutes);
 
 app.use((error, req, res, body) => {
-  res.status(error.status || 500).json({
+  res.status(error.code || 500).json({
     message: error.message || "An unknown error occured",
     code: error.code || 500,
   });

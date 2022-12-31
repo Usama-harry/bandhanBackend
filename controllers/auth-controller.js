@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 const HttpError = require("../models/HttpError");
+const utils = require("../utils");
 
 module.exports.signUpController = async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -32,7 +33,7 @@ module.exports.signUpController = async (req, res, next) => {
 
     const token = jwt.sign(
       { email: user.email, userId: user._id.toString() },
-      "harryexpensetrackingapp",
+      utils.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
@@ -68,7 +69,7 @@ module.exports.signInController = async (req, res, next) => {
 
     const token = jwt.sign(
       { email: user.email, userId: user._id.toString() },
-      "harryexpensetrackingapp",
+      utils.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
