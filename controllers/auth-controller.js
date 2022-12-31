@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 const HttpError = require("../models/HttpError");
@@ -29,8 +30,15 @@ module.exports.signUpController = async (req, res, next) => {
 
     await user.save();
 
+    const token = jwt.sign(
+      { email: user.email, userId: user._id.toString() },
+      "harryexpensetrackingapp",
+      { expiresIn: "1h" }
+    );
+
     return res.json({
-      data: user.toObject({ getters: true }),
+      userId: user._id.toString(),
+      token: token,
       code: 200,
     });
   } catch (error) {
@@ -58,8 +66,15 @@ module.exports.signInController = async (req, res, next) => {
       return next(new HttpError("Invalid password", 401));
     }
 
+    const token = jwt.sign(
+      { email: user.email, userId: user._id.toString() },
+      "harryexpensetrackingapp",
+      { expiresIn: "1h" }
+    );
+
     return res.json({
-      data: user.toObject({ getters: true }),
+      userId: user._id.toString(),
+      token: token,
       code: 200,
     });
   } catch (error) {
