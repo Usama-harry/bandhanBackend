@@ -37,7 +37,7 @@ module.exports.signUpController = async (req, res, next) => {
       { expiresIn: "1h" }
     );
 
-    const expiry = new Date(Date.now() + 60 * 60 * 1000);
+    const expiry = 60 * 60 * 1000;
 
     return res.json({
       userId: user._id.toString(),
@@ -76,7 +76,7 @@ module.exports.signInController = async (req, res, next) => {
       { expiresIn: "1h" }
     );
 
-    const expiry = new Date(Date.now() + 60 * 60 * 1000);
+    const expiry = 60 * 60 * 1000;
 
     return res.json({
       userId: user._id.toString(),
