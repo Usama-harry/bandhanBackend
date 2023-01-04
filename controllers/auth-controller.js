@@ -37,9 +37,12 @@ module.exports.signUpController = async (req, res, next) => {
       { expiresIn: "1h" }
     );
 
+    const expiry = new Date(Date.now() + 60 * 60 * 1000);
+
     return res.json({
       userId: user._id.toString(),
       token: token,
+      expiry: expiry,
       code: 200,
     });
   } catch (error) {
@@ -73,9 +76,12 @@ module.exports.signInController = async (req, res, next) => {
       { expiresIn: "1h" }
     );
 
+    const expiry = new Date(Date.now() + 60 * 60 * 1000);
+
     return res.json({
       userId: user._id.toString(),
       token: token,
+      expiry: expiry,
       code: 200,
     });
   } catch (error) {
