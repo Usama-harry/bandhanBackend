@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+const Expense = require("./Expense");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -8,8 +9,7 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   expenses: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Expense",
+      type: Expense.expenseSchema,
     },
   ],
 });

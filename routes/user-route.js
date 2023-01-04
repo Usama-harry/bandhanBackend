@@ -7,4 +7,6 @@ const router = express.Router();
 
 router.get("/data", isAuth, userController.getUserDataController);
 
+router.post("/addExpense", isAuth, userController.postAddNetItemController);
+
 module.exports = router;
