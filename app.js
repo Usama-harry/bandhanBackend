@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const HttpError = require("./models/HttpError");
 const utils = require("./utils");
 const authRoutes = require("./routes/auth-routes");
+const userRoutes = require("./routes/user-route");
 
 mongoose.set("strictQuery", false);
 const app = express();
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
 
 app.use((error, req, res, body) => {
   res.status(error.code || 500).json({
