@@ -6,18 +6,18 @@ const HttpError = require("../models/HttpError");
 const utils = require("../utils");
 
 module.exports.signUpController = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, phone, password, address } = req.body;
 
-  if (!name || !email || !password) {
+  if (!name || !phone || !address || !password) {
     return next(new HttpError("Invalid inputs", 401));
   }
 
   try {
-    var user = await User.findOne({ email: email });
+    var user = await User.findOne({ phone: phone });
 
     if (user) {
       return next(
-        new HttpError("Email already linked to another account", 401)
+        new HttpError("Phone is already linked to another account", 401)
       );
     }
 
@@ -25,14 +25,15 @@ module.exports.signUpController = async (req, res, next) => {
 
     user = new User({
       name: name,
-      email: email,
+      phone: phone,
       password: hashedPassword,
+      address: address,
     });
 
     await user.save();
 
     const token = jwt.sign(
-      { email: user.email, userId: user._id.toString() },
+      { phone: user.phone, userId: user._id.toString() },
       utils.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -40,7 +41,7 @@ module.exports.signUpController = async (req, res, next) => {
     const expiry = 59 * 60 * 1000;
 
     return res.json({
-      userId: user._id.toString(),
+      user: user.toObject({ getters: true }),
       token: token,
       expiry: expiry,
       code: 200,
@@ -51,17 +52,17 @@ module.exports.signUpController = async (req, res, next) => {
 };
 
 module.exports.signInController = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { phone, password } = req.body;
 
-  if (!email || !password) {
+  if (!phone || !password) {
     return next(new HttpError("Invalid inputs", 401));
   }
 
   try {
-    var user = await User.findOne({ email: email });
+    var user = await User.findOne({ phone: phone });
 
     if (!user) {
-      return next(new HttpError("User not found with this email", 404));
+      return next(new HttpError("User not found with this phone number", 404));
     }
 
     const isMatched = await bcrypt.compare(password, user.password);
@@ -71,7 +72,7 @@ module.exports.signInController = async (req, res, next) => {
     }
 
     const token = jwt.sign(
-      { email: user.email, userId: user._id.toString() },
+      { phone: user.phone, userId: user._id.toString() },
       utils.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -79,7 +80,7 @@ module.exports.signInController = async (req, res, next) => {
     const expiry = 59 * 60 * 1000;
 
     return res.json({
-      userId: user._id.toString(),
+      user: user.toObject({ getters: true }),
       token: token,
       expiry: expiry,
       code: 200,
