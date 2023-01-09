@@ -5,7 +5,8 @@ const bodyParser = require("body-parser");
 const HttpError = require("./models/HttpError");
 const utils = require("./utils");
 const authRoutes = require("./routes/auth-routes");
-const userRoutes = require("./routes/user-route");
+const shopRoutes = require("./routes/shop-routes");
+const adminRoutes = require("./routes/admin-routes");
 
 mongoose.set("strictQuery", false);
 const app = express();
@@ -26,7 +27,8 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 
 app.use("/auth", authRoutes);
-app.use("/user", userRoutes);
+app.use("/shop", shopRoutes);
+app.use("/admin", adminRoutes);
 
 app.use((error, req, res, body) => {
   res.status(error.code || 500).json({
