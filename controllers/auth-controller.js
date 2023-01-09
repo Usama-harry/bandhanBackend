@@ -41,9 +41,11 @@ module.exports.signUpController = async (req, res, next) => {
     const expiry = 59 * 60 * 1000;
 
     return res.json({
-      user: user.toObject({ getters: true }),
-      token: token,
-      expiry: expiry,
+      data: {
+        user: user.toObject({ getters: true }),
+        token: token,
+        expiry: expiry,
+      },
       code: 200,
     });
   } catch (error) {
@@ -80,9 +82,11 @@ module.exports.signInController = async (req, res, next) => {
     const expiry = 59 * 60 * 1000;
 
     return res.json({
-      user: user.toObject({ getters: true }),
-      token: token,
-      expiry: expiry,
+      data: {
+        user: user.toObject({ getters: true }),
+        token: token,
+        expiry: expiry,
+      },
       code: 200,
     });
   } catch (error) {

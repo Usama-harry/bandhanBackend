@@ -1,6 +1,7 @@
 //Models
 const Category = require("../models/Category");
 const Data = require("../models/Data");
+const User = require("../models/User");
 const HttpError = require("../models/HttpError");
 
 //Get
@@ -55,6 +56,24 @@ module.exports.getCategoriesController = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
+    return next(new HttpError());
+  }
+};
+
+module.exports.patchDeliveryAddress = async (req, res, next) => {
+  const address = req.body.address;
+  const user = req.user;
+
+  if (!address) return next(new HttpError("Invalid inputs", 401));
+
+  try {
+    user.address = address;
+    await user.save();
+    return res.json({
+      data: user.toObject({ getters: true }),
+      code: 200,
+    });
+  } catch {
     return next(new HttpError());
   }
 };
